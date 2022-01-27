@@ -3,13 +3,15 @@
  */
 
  const Cloudant = require('@cloudant/cloudant');
-
+ const COUCH_URL = "hidden";
+ const IAM_API_KEY = "hidden";
 
  async function main(params) {
-     const cloudant = Cloudant({
-         url: params.COUCH_URL,
-         plugins: { iamauth: { iamApiKey: params.IAM_API_KEY } }
-     });
+
+    const cloudant = Cloudant({
+        url: COUCH_URL,
+        plugins: { iamauth: { iamApiKey: IAM_API_KEY } }
+    });
  
  
      try {
@@ -20,3 +22,10 @@
      }
  
  }
+
+result = main(COUCH_URL, IAM_API_KEY);
+console.log(result);
+
+result.then(function(result) {
+    console.log(result) // "Some User token"
+ })

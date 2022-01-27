@@ -2,13 +2,16 @@
  * Get all dealerships
  */
 
+const COUCH_URL = "hidden";
+const IAM_API_KEY = "hidden";
+
 const Cloudant = require('@cloudant/cloudant');
 
-function main(params) {
+function main(COUCH_URL, IAM_API_KEY) {
 
     const cloudant = Cloudant({
-        url: params.COUCH_URL,
-        plugins: { iamauth: { iamApiKey: params.IAM_API_KEY } }
+        url: COUCH_URL,
+        plugins: { iamauth: { iamApiKey: IAM_API_KEY } }
     });
 
     let dbListPromise = getDbs(cloudant);
@@ -26,3 +29,10 @@ function getDbs(cloudant) {
             });
     });
 }
+
+result = main(COUCH_URL, IAM_API_KEY);
+console.log(result);
+
+result.then(function(result) {
+    console.log(result) // "Some User token"
+ })
