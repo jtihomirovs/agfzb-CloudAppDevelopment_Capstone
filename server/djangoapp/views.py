@@ -110,12 +110,27 @@ def get_dealerships(request):
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         url = "https://99cc092b.eu-gb.apigw.appdomain.cloud/api/reviews"
-
+        
         # Get dealers from the URL
         reviews = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
-        context = {"reviews": reviews}
+        context = {
+            "reviews": reviews,
+            "dealer_id": dealer_id
+            }
 
         return render(request, 'djangoapp/dealer_details.html', context)
+
+
+def get_dealer_name(dealer_id):
+    url = "https://99cc092b.eu-gb.apigw.appdomain.cloud/api/dealerships"
+    # Get dealers from the URL
+    dealerships = get_dealers_from_cf(url)
+
+    # Filter dealer by it's id and retrieve it's full name
+    # full_name = [x for x in dealerships if x['id'] == dealer_id]
+    for dealer in dealerships:
+        if dealer.id == dealer_id:
+            return dealer.full_name
 
 
 # Create a `add_review` view to submit a review
@@ -132,9 +147,6 @@ def add_review(request, dealer_id):
                 review["dealership"] = dealer_id
                 review["review"] = form["content"]
                 review["purchase"] = form.get('purchasecheck', False)
-
-                print('Purchase check: ', form.get('purchasecheck'))
-                print('Purchase check: ', review["purchase"])
 
                 if review["purchase"] == '1':
                     car = CarModel.objects.get(pk=form["car"])
@@ -159,7 +171,8 @@ def add_review(request, dealer_id):
         else: 
             context = {
                 "cars": CarModel.objects.filter(dealer_id=dealer_id),
-                "dealer_id": dealer_id
+                "dealer_id": dealer_id,
+                "dealer_name": get_dealer_name(dealer_id)
             }
             return render(request, 'djangoapp/add_review.html', context)
     else:

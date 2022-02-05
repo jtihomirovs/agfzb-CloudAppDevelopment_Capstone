@@ -10,7 +10,6 @@ from ibm_watson.natural_language_understanding_v1 import Features, SentimentOpti
 
 # Create a `get_request` to make HTTP GET requests
 def get_request(url, **kwargs):
-    print(kwargs)
     print("GET from {} ".format(url))
     try:
         # Call get method of requests library with URL and parameters
@@ -26,8 +25,6 @@ def get_request(url, **kwargs):
 
 # Create a `post_request` to make HTTP POST requests
 def post_request(url, json_payload, **kwargs):
-    print(kwargs)
-    print(json_payload)
     print("POST to {} ".format(url))
     try:
         response = requests.post(url, params=kwargs, json=json_payload)
@@ -36,7 +33,6 @@ def post_request(url, json_payload, **kwargs):
         print("Network exception occurred")        
     status_code = response.status_code
     print("With status {} ".format(status_code))
-    print(response.text)
     json_data = json.loads(response.text)
     return json_data
 
@@ -73,7 +69,6 @@ def get_dealer_reviews_from_cf(url, dealerId, **kwargs):
             return results    
         else:      
             # Get the row list in JSON as dealers
-            print(json_result)
             reviews = json_result["reviewsList"]
             # For each dealer object
             for review in reviews:
@@ -117,8 +112,6 @@ def analyze_review_sentiments(text):
         language='en',
         features= Features(sentiment= SentimentOptions())
     ).get_result()
-
-    print(json.dumps(response, indent=2))
 
     sentiment_score = str(response["sentiment"]["document"]["score"])
     sentiment_label = response["sentiment"]["document"]["label"] 

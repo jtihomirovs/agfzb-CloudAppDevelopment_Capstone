@@ -10,7 +10,10 @@
                     <th data-field="city">City</th>
                     <th data-field="address">Address</th>     
                     <th data-field="zip">Zip</th>               
-                    <th data-field="state" data-filter-control="select">State</th>                                            
+                    <th data-field="state" data-filter-control="select">State</th>
+                    {% if user.is_authenticated %}
+                        <th data-field="review">Review</th>   
+                    {% endif %}                                                                 
                 </tr>
             </thead>
             <tbody>
@@ -21,7 +24,12 @@
                         <td>{{dealer.city}}</td>           
                         <td>{{dealer.address}}</td>
                         <td>{{dealer.zip}}</td>                              
-                        <td>{{dealer.state}}</td>                                     
+                        <td>{{dealer.state}}</td>
+                        {% if user.is_authenticated %}
+                            <td style="padding: 2%;">
+                                <a href="{% url 'djangoapp:add_review' dealer.id %}">Add review</a>
+                            </td>
+                        {% endif %}                                                             
                     </tr>
                 {% endfor %}
             </tbody>
